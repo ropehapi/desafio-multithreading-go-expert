@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,12 +13,10 @@ func main() {
 	go fetchFromApi("https://brasilapi.com.br/api/cep/v1/86601002", resultChannel)
 	go fetchFromApi("http://viacep.com.br/ws/86601002/json/", resultChannel)
 
-	result := <-resultChannel
-	if result == "" {
-		result = <-resultChannel
+	select {
+	case data := <-resultChannel:
+		println(data)
 	}
-
-	fmt.Println(result)
 }
 
 func fetchFromApi(url string, resultChannel chan<- string) {
